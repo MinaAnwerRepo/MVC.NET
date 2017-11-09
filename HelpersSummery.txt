@@ -1,0 +1,9 @@
+----------------------all Helpers Conclusion----------------------------------
+1- Label : 
+
+
+2- DropDownList :
+  @Html.DropDownList("Gender", new List<SelectListItem>() {
+                           new SelectListItem{Text="Male",Value="Male"} ,
+                           new SelectListItem{Text="Female",Value="Female"} })
+3- 						
