@@ -1,9 +1,16 @@
 ----------------------all Helpers Conclusion----------------------------------
 1- Label : 
 
+@Html.LabelFor(model => model.Name)
+@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
 
 2- DropDownList :
+
   @Html.DropDownList("Gender", new List<SelectListItem>() {
                            new SelectListItem{Text="Male",Value="Male"} ,
                            new SelectListItem{Text="Female",Value="Female"} })
+ +adding Optional Label
+  @Html.DropDownList("Gender", new List<SelectListItem>() {
+                           new SelectListItem{Text="Male",Value="Male"} ,
+                           new SelectListItem{Text="Female",Value="Female"} },"SelectItem")
 3- 						
