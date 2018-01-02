@@ -1,4 +1,6 @@
- + how do you know the vergion of MVC
+----------------------------------------------------------------------------------------------------------------------------
+1- how do you know the vergion of MVC : 
+
 		 go to referneces and right click then version number 
 		 or use  typeo(ControllerName).Assembly.GetName().Vergion.ToString();
 		 
@@ -6,20 +8,22 @@
         {
             return typeof(Controller).Assembly.GetName().Version.ToString();
         }
- 
- + URL : consists from http://localhost/MVCProjectName/Controller/FunctionName
+
+----------------------------------------------------------------------------------------------------------------------------		
+2- URL : consists from http://localhost/MVCProjectName/Controller/FunctionName
  
  it does not map to phiscal path for the folders in server 
  
- 
- + add another Route to Route Path : 
+----------------------------------------------------------------------------------------------------------------------------
+3- add another Route to Route Path : 
  
      routes.MapRoute(
                 name: "Default" ,
                 url:"{controller}/{action}/{id}" ,
                 defaults:new {controller = "Account", action= "Login", id = UrlParameter.Optional } );
 
- + you can send many data in querey string and read it with normal ways in WebForms
+----------------------------------------------------------------------------------------------------------------------------
+4- you can send many data in querey string and read it with normal ways in WebForms
  
         http://localhost/Test/Home/Index/45?name="hamada"
  
@@ -29,7 +33,8 @@
          }
 
      or  you can use function parameters but make sure that names are identical 
-	 
+
+----------------------------------------------------------------------------------------------------------------------------	 
 5 - Views : 
 
     the Purpose of View is to render data from Controller Function to View that can be diplayed to the end user 
@@ -51,7 +56,8 @@
 			<li> @item </li>
 		}	   
 	</ul>	
-	 
+
+----------------------------------------------------------------------------------------------------------------------------	
 	 
 	 
 	 
