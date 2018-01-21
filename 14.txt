@@ -1,0 +1,82 @@
+//-----------------------------------------------------------------------------------------
+this is part 14 for asp.net MVC Tutorials 
+//-----------------------------------------------------------------------------------------
+in this slide we are going to discuss the idea behind press Edit Button  in index page : 
+
++add new functions in EmployeeController one get , other Post 
+
+        [HttpGet]
+        public ActionResult Edit(int Id)
+        {
+            EmployeeBO emp = new EmployeeBO();
+            emp=emp.GetById(Id);
+            return View(emp);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EmployeeBO updatedEmployee)
+        {
+            EmployeeBO emp = new EmployeeBO();
+            if (ModelState.IsValid)
+            {
+                emp.update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            return View(updatedEmployee);       
+        }
+		
+    + add Edit.cshtml automatically in your project .. 		
+		
+		  just add this line after @Html.BeginForm
+		  {
+		  }
+			@if (Model.Statues != null)
+			{
+			<div>
+				@Html.Label(Model.Statues);
+			</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
