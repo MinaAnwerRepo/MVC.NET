@@ -1,0 +1,143 @@
+//-------------------Part 19 Unintended updates in mvc--------------------------------------------------
+in the same Edit View .....if we wish to make name as read only propberty 
+
+go to view and replace : 
+
+	  @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+	  @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+with : 
+
+
+       @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+
++ if you do that name is still required prop and now not exist ,,,,update request will never processed . 	   
++ so you need also , to add hidden element for name  :
+ 
+                @Html.HiddenFor(model => model.Name)
+//-----------------------------------------------------------------------------------------------------
+using some tools like fidler ,, you can sniff your request and try to post data from outside request ..
+it will success and data will be posted even if name prop ..
+
++go to Edit Activity and edit it like this :
+
+  [HttpPost]
+        [ActionName("Edit")]
+        public ActionResult Edit_post(int Id)
+        {
+           
+
+            var embdb = new EmployeeBO().GetById(Id);
+            EmployeeBO updatedEmployee = new EmployeeBO() { Id=embdb.Id, City=embdb.City, Gender =embdb.Gender, Name=embdb.Name  };
+            UpdateModel(updatedEmployee, new string [] { "City","Gender" }) ;
+
+            if (ModelState.IsValid)
+            {
+                new EmployeeBO().update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            return View(updatedEmployee);       
+        }
+		
+		
+		
+		
+this time you can not update record using Fidler .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
