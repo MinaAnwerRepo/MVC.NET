@@ -46,6 +46,53 @@ it will success and data will be posted even if name prop ..
 this time you can not update record using Fidler .
 
 
+//--------------------------------------------------------------------------------------------------------
+this is another way to bind data using attributes :
+{Part 21 Including and excluding properties from model binding using bind attributes}
+
+
+         [HttpPost]
+		 
+        [ActionName("Edit")]
+        public ActionResult Edit_post([Bind(Exclude ="Name")] EmployeeBO updatedEmployee)
+        {
+
+
+            //var embdb = new EmployeeBO().GetById(Id);
+            //EmployeeBO updatedEmployee = new EmployeeBO() { Id=embdb.Id, City=embdb.City, Gender =embdb.Gender, Name=embdb.Name  };
+            //UpdateModel(updatedEmployee, new string [] { "City","Gender" }) ;
+
+            updatedEmployee.Name = new EmployeeBO().GetById(updatedEmployee.Id).Name;
+
+            if (ModelState.IsValid)
+            {
+                new EmployeeBO().update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            updatedEmployee.Statues = "error while updating request ";
+            return View(updatedEmployee);       
+        }
++ you will find  error occurred .. go to immediate windows ..and debug 
+
+in command window Type : immed 
+		
+			? ModelState["Name"]
+			{System.Web.Mvc.ModelState}
+				Errors: Count = 1
+				Value: null
+			? ModelState["Name"].Value
+			null
+			? ModelState["Name"].Errors[0]
+			{System.Web.Mvc.ModelError}
+				ErrorMessage: "The Name field is required."
+				Exception: null
+
+
+// name field is required ..so kindly remove [Required] tag over class Elements ..
+
+
+
 
 
 
