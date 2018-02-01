@@ -1,0 +1,37 @@
+1- happy scenario test Search_outgoing_Dispute
+
+ * statues DisputeCreated 
+ * CommericalRegisterationNumber = 123
+ * nationalId = 28709282104339
+ * MobileNumber = '00201001737649'
+ 
+ -> select * 
+from dbo.NonFinancialDispute a
+inner join [MobileInterbankSwitch].dbo.Wallets b
+on a.WalletNumber =b.[WalletNo]
+where Status = 1 and SenderSchemeId = 6 and 
+CommercialRegistrationNumber = '123' and 
+a.NationalId = '28709282104339'
+
+* check for DateTo , DateFrom 
+
+2- happy scenario test Search_MobileNumber_CreateDispute :
+
+* Search with nationalId , CommercialRegistrationNumber 
+use MobileInterbankSwitch
+select * from dbo.Wallets
+where CommercialRegistrationNo = '123'
+and  SchemeId <> 6
+
+* create dispute at normal scenario ..
+--> done !!
+
+* check at Create Dispute is nationalId , commericalRegnum is stored in db or not .
+
+
+
+
+
+
+
+
