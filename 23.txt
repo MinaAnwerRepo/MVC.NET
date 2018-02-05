@@ -355,31 +355,153 @@ after you press the button you can Easily remove element from database :
         </div>
   </div>
   
-  
+  => you can also use another constructor that take the list from viewBag 
 
+//------------------------------------------------------------------------------------------
+	 //------------------------Part 35 Drop DownList Selective Value -----------------------.
+
+lets cont. to the previous ex : 
+
+=> if you want to start drop dropdownlist to be selected with specify value ..
+  you can use this overload : 
+   ViewBag.Departments = new SelectList(dbx.Departments, "Id", "Name","1"); 
+
+=>  we add also added a column is selected in dataBase to handel this issue . 
+
+=> finally my code will be like : 
+
+       var Id = dbx.Departments.FirstOrDefault(x => x.IsSelected != null).Id; 
+	   
+       ViewBag.Departments = new SelectList(dbx.Departments, "Id", "Name",Id.ToString()); 
 	 
+//------------------------------------------------------------------------------------------
+      //----------------------Part 36 Difference between Html TextBox and Html TextBoxFor ------------------
 	 
+	            long not intersted demo kindly check from video , I got the main idea 
+
+//------------------------------------------------------------------------------------------
+      //----------------------Part 37 Generating Aradio Button List control in mvc using html helper ------------------
+	 			
+=> this is index get action  :
+     [HttpGet]
+        public ActionResult Index()
+        {
+            Company company = new Company();
+
+            return View(company); 
+        }
+		
+=> this is index Post Function : 
+    		
+	    [HttpPost]
+        public string Index(Company company)
+        {
+            if (!string.IsNullOrEmpty(company.SelectedDepartment))
+            {
+                return "you choosed ..."+company.SelectedDepartment;
+            }
+            else
+                return "nothing selected ..";
+        }
 	 
-	 
-	 
-	 
-	 
-	 
+
+=> this is index.cshtml 
+
+		@model WebApplication8.DataBaseModel.Company
+		@{
+			ViewBag.Title = "Index";
+		}
+		<h2>Index</h2>
+		@using (Html.BeginForm())
+		{
+			foreach (var department in Model.Departments)
+			{
+				@Html.RadioButtonFor(m=>m.SelectedDepartment, department.Id) <span>&nbsp;</span> @department.Name
+				<br/>
+				<br /> 
+			}
+			<hr/>
+			<br/>
+			<input type="Submit" value="Submit" />
+		}
 
 
 
+//------------------------------------------------------------------------------------------
+      //----------------------Part 40 using Custom attribute  ------------------
+
+demo :
+
+                public  partial class  tblEmployee
+        {
+            
+        }
+
+        public class  EmployeeMetaData
+        {
+            [Display(Name ="Full Employee Name")]
+            public string FullName { get; set; }
+           
+           [DisplayName("Person Type ")]
+            public  string Gender { get; set; }
+
+           [DisplayFormat(DataFormatString = "{0:d}")]
+           public  DateTime  HireDate { get; set; }
+
+          [DisplayFormat(NullDisplayText = "Gender not Specified")]
+          public string EmailAddress { get; set; }
 
 
+        [ScaffoldColumn(false)]
+           public  int Salary { get; set; }    //this Colum will not Be displayed 
+
+        }
+
+//------------------------------------------------------------------------------------------
+      //----------------------Part 41  ------------------
+
+	            [Display(Name ="Full Employee Name")]
+            public string FullName { get; set; }
+           
+            [DisplayName("Person Type ")]
+            public  string Gender { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:d}")]
+           public  DateTime  HireDate { get; set; }
+
+            [DisplayFormat(NullDisplayText = "Gender not Specified")]
+            [DataType(DataType.EmailAddress)]
+            public string EmailAddress { get; set; }
 
 
+            [DataType(DataType.Currency)]
+            public  int Salary { get; set; }    //this Colum will not Be displayed 
 
+       //  [DisplayColumn("Column name")]  when you have complex type and you want to display only one attribute from it . 
 
+//------------------------------------------------------------------------------------------------------------------------
+      //----------------------Part 42  ------------------
 
+	1-  go to Shared and Create anew Folder called : DisplayTemplates
+    2-  inside it add new view called Uri (have only) : 
+         <a href="@ViewData.Model" target="_blank" >@ViewData.Model</a> 
+		 
+	3-  at your link that marked 
+	
+	      [DataType(DataType.Url)]
+          public string PersonalWebSite { get; set; }
+	
+	4- if you want to change the name of file use atttribute 
+        
+           [DataType(DataType.Url)]
 
-
+            [UIHint("CustomUrlName")]
+            public string PersonalWebSite { get; set; }
+			
 				 
-				 
-				 
+//-----------------------------------------------------------------------------------------------------------------------
+-
+      //----------------------Part 43  ------------------
 				 
 				 
 				 
