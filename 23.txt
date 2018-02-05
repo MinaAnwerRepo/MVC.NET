@@ -292,10 +292,79 @@ after you press the button you can Easily remove element from database :
 
 //------------------------Part 30 View engines in asp net mvc-----------------------------
 
+//------------------------Part 31 spark View engines         -----------------------------
 
+ --> not intersted two videos .. actually not applicable 
 
+//----------------------------------------------------------------------------------------------
 
+//----------------------Part 32 Convention used by MVC to Find views-----------------------------
+    
+   => by default MVC looks for a view with the same name as that of the controller action method 
+    name in the following locations :
+	
+	views/folderNameMatchingControllerName
+	views/Shared
+	
+	with this extensions :
+	.cshtml
+	.vbhtml
+	.aspx
+	.ascx
+	
+	
+	if you have Multible files with the same name in different locations 
+	you have to specify the full name :
+	~/Views/Employee/Index.cshtml
+	
+	
+	
+  note : 
+    shared folder is basically used to share Views between controller 
+	
+  conclusion note : 
+    when you use code like :
 
+        	return View(employeeData); 
+     by default it search for view with the same name of controller and by default
+	 with .cshtml 
+	 if you want to change this you need to use another overload from View function that 
+	 take view name 
+	 if you need to go to view with another extensions (.aspx for ex) 
+	 you need to put the full path 
+     (login.aspx is not correct ....he will render that to login.aspx.cshtml
+//----------------------------------------------------------------------------------------
+	 //------------------------Part 33 some Html helpers --------------------------------
+	 
+	 some Helpers ..... most of them is Known 
+	 
+//----------------------------------------------------------------------------------------
+	 //------------------------Part 34 some Html helpers DropDownList --------------------
+	 
+ =>	you can bind it with hard-code like this : 
+	
+  <div class="col-md-12">
+        <div class="form-group">
+            @Html.Label("Gender", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("Departments", new List<SelectListItem>() {
+
+                 new SelectListItem() { Text = "Male" , Value="Male" },
+                 new SelectListItem() { Text = "Female" , Value="Female" } }, "Select Gender", new { @class = "form-control" })
+            </div>
+        </div>
+  </div>
+  
+  
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 
 
 
