@@ -1,0 +1,22 @@
+//-------------lesson 49-------------------------------------------------
+//---------------------HTML encoding ------------------------------------
+
+
+the problem of that when Creating MVC Custom contrlls , and this custom controls return string , some char will be in encoded 
+to fix this issue youcan : 
+
+1- 
+2-
+3- 
+
+for more details look at Image Custom helpers file 
+
+//-------------------lesson 50 ----------------------------------------
+
+=> enable comppile time Errors and validation 
+1- simply open your app 
+2- using appname.csproj with  notpad ++ 
+3- search for  <MvcBuildViews>false</MvcBuildViews>
+4- change it with true .
+
+//----------------------------------------------------------------------
