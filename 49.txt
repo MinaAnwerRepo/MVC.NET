@@ -11,12 +11,167 @@ to fix this issue youcan :
 
 for more details look at Image Custom helpers file 
 
-//-------------------lesson 50 ----------------------------------------
+//-------------------lesson 50 --------------------------------------------------
 
 => enable comppile time Errors and validation 
 1- simply open your app 
-2- using appname.csproj with  notpad ++ 
+2- using AppName.csproj with  NotPad ++ 
 3- search for  <MvcBuildViews>false</MvcBuildViews>
 4- change it with true .
 
-//----------------------------------------------------------------------
+//------------------lesson 51 ----------------------------------------------------
+//------------------partial Views-------------------------------------------------
+
+make aview as ashared between many views and called it with @html.Partial 
+
+
+=> you can put shared view in controller folder and this means that it will be seen by this controller only 
+   and you can also put it in shared folder where all views can see it . 
+
+=> you can simply use @html.Partial(viewname , object that this view build over)
+
+
+//---------------------------------------------------------------------------------
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
