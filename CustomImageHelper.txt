@@ -32,3 +32,14 @@
 
 
     }
+	
+	
+	How to use this Custom Helpers : 
+	
+	
+	 @Html.Image(@Model.Photo , @Model.ALterbateText)
+            
+     @Html.Image(@Model.Photo, @Model.ALterbateText,new {@class = "img-circle" } )
+			
+			
+			
