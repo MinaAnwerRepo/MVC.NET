@@ -54,21 +54,87 @@ Cross site scripting attack :
 
 
 
+//-------------------Lesson 57------------------------------------------------------------------
+
+=> you can write full block of c# code in cshtml file using :
+
+@{
+  -----all c# code -----
+  
+  
+}
+
+=> you can also switch from this block of c# code is to use  <text> </text>   or @:
+
+demo : 
+
+@for ( int i=0 ; i<=19 ; i++)
+{
+    <b>@i </b>
+	
+	if(i %2 == 0)
+	{
+	 @: -Even 
+	}
+	
+    else
+    {
+	 <text> -odd </text>
+	}
+}
 
 
+//-------------------Lesson 58------------------------------------------------------------------
+
+=> @*this is to comment some thing in Razo Viwes *@
+
+=> also you can switch between html and c# using operator @ as you know
+
+=>  mvc is smart and can understand @ symbol in Email and does not Generate any error 
+demo : 
+
+ <b> minaanwer@gmail.com </b>
+ 
+=> in another cases where @ is not in Email , MVC can not understand it 
+  demo : 
+
+      I will meet  you  @ office 
+
+ simply add another @ to @ and mvc will override it  
+ I will meet you @@office -->  I will meet you @ office  
+	
+	
+//-------------------Lesson 59------------------------------------------------------------------
+=> layout View 
 
 
+put all code that always repeated in every page in out website once in layout view 
+anf all views will inherit form this view . 
+
+=> to add layout which is used as master Page simply add a file in shared folder  _Layout.cshtml
+   where you want to make every view add its content jsut add  : @RenderBody()
+	
+=> in every view to make it inherit from this layout just add 
+   Layout = "~/Views/Shared/_Layout.cs"; 
+//-------------------Lesson 60------------------------------------------------------------------
+
+=>  to avoid repeat this line : Layout = "~/Views/Shared/_Layout.cs"; 
+
+          in every view in the solution , just go to _ViewStart.cshtml
+          this file is always called after begin executing every view  .and add line that you want to be repeated 
+  
+=>   you can still use Layout prop in every page , and override the inherited value . 
 
 
+=>   you can also specify the layout file in controller action method  :  return View("Create","_LayoutName");
 
-
-
-
-
-
-
-
-
+=> you can also change layout based on Browser : 
+  
+   @{
+       Layout = Request.Browser.IsBrowser("Chrome") ? 
+	                          "~/Views/Shared/_Layout.cshtml" : "~/Views/Shared/_layoutIE.cshtml";
+    }
+ 
 
 
 
