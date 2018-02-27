@@ -32,7 +32,7 @@ make aview as ashared between many views and called it with @html.Partial
 
 
 //-------------------Lesson 52--------------------------------------------------------------
-//-------------------Part 53 Difference between html.partial and html.renderpartial------------
+//-------------------Part 53 Difference between html.partial and html.renderpartial---------
 
 
 both of them is used to render Partial view 
@@ -48,33 +48,9 @@ which one is better in performance ?
 from a performance perspective , rendering directly to the output stream is better 
 so RenderRartial() does exactly the same thing and it better for performance over Partial .
 
-
+//-------------------Lesson 54------------------------------------------------------------------
    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Cross site scripting attack : 
 
 
 
