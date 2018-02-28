@@ -1,0 +1,1188 @@
+----------------------------------------------------------------------------------------------------------------------------
+1- how do you know the vergion of MVC : 
+
+		 go to referneces and right click then version number 
+		 or use  typeo(ControllerName).Assembly.GetName().Vergion.ToString();
+		 
+		   public string Index()
+        {
+            return typeof(Controller).Assembly.GetName().Version.ToString();
+        }
+
+----------------------------------------------------------------------------------------------------------------------------		
+2- URL : consists from http://localhost/MVCProjectName/Controller/FunctionName
+ 
+ it does not map to phiscal path for the folders in server 
+ 
+----------------------------------------------------------------------------------------------------------------------------
+3- add another Route to Route Path : 
+ 
+     routes.MapRoute(
+                name: "Default" ,
+                url:"{controller}/{action}/{id}" ,
+                defaults:new {controller = "Account", action= "Login", id = UrlParameter.Optional } );
+
+----------------------------------------------------------------------------------------------------------------------------
+4- you can send many data in querey string and read it with normal ways in WebForms
+ 
+        http://localhost/Test/Home/Index/45?name="hamada"
+ 
+        public string Index(string id )
+         {
+             return "welcom in our first app your id is : "+id +"name is"+Request.QueryString["name"];
+         }
+
+     or  you can use function parameters but make sure that names are identical 
+
+----------------------------------------------------------------------------------------------------------------------------	 
+5 - Views : 
+
+    the Purpose of View is to render data from Controller Function to View that can be diplayed to the end user 
+     normally Browser can diplay simple data types like string , int 
+     but can not diplay complex types like List<string> , so we will use Views and HtmlCS to fix this 	 
++ in Cotroller You can Add : 
+    public ActionResult Index()
+    {
+       var data = new List<string>() {"Egypt","India","monsa","ayekaalsm","ayehaga" };
+       ViewBag.data = data;
+       return View();
+    }	 
+	
+
++ in View You can Add
+	<ul>
+		@foreach (var item in ViewBag.data)
+		{
+			<li> @item </li>
+		}	   
+	</ul>	
+
+----------------------------------------------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------------------------------------------
+6- ViewBag and ViewData : 
+   
+ + ViewData["Countries"] = new List<string>() { "Egypt", "India", "monsa", "ayekaalsm", "ayehaga" };
+ +
+	<ul>
+	@foreach (var item in (List<string>) ViewData["Countries"])
+	{
+		<li> @item </li>
+	}	   
+	</ul>
+
+----------------------------------------------------------------------------------------------------------------------------
+ 7- Models in MVC 
+ + add this in any controller :  
+        public ActionResult Details()
+        {
+            Employee Emp = new Employee() { EmployeeId=101 , Gender="male" , City="ass", Name="ahmed" };
+            return View(Emp);
+        }
+  + add also View :
+  @model Test.Models.Employee
+  @{
+     ViewBag.Title = "Details";
+    }
+  <h2>Details</h2>
+	<table>
+		<tr>
+			<td>Employee Id</td>
+			
+			<td>@Model.EmployeeId</td>
+		</tr>
+		<tr>
+			<td>Employee Name</td>
+
+			<td>@Model.Name</td>
+		</tr>
+		<tr>
+			<td>Employee City</td>
+
+			<td>@Model.City</td>
+		</tr>
+		<tr>
+			<td>Employee Gender</td>
+
+			<td>@Model.Gender</td>
+		</tr>
+	</table>
+----------------------------------------------------------------------------------------------------------------------------	
+8- Using Entity FramWork to Get Data : 
+
++ Create new model 
+
++ add this code in Function Index of Employee Controller 
+
+ public ActionResult Index(int id)
+        {
+            //EmployeeContext employeecontext = new EmployeeContext();
+            // Employee data= employeecontext.Employees.Single(emp => emp.Id == id);
+            SamplesEntities Context = new SamplesEntities();
+            Employee data = Context.Employees.Where(e => e.Id == id).FirstOrDefault();
+
+            return View(data);
+        }
+		
+with the same Previos View we will got the same Result 
+
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+ 7 - difference Between Create Get and Create Post 
+
+- in create Get we simply put the form inputs boxes 
+- in Create Put parameters we recive what user input with many ways : 
+- A) with FormCollection object 
+     which have property called allKeys which have all keys of dic contains all data from form 
+
+demo :  
+
+	     [HttpPost]
+        public  ActionResult Create(FormCollection formcollection)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+          
+            foreach (var item in formcollection.AllKeys)
+            {
+                dic.Add(item, formcollection[item]);
+            }
+
+            Employee emp = Mapper.Map(dic);
+            EmployeeBussinnessLayer helper = new EmployeeBussinnessLayer();
+            helper.AddEmployee(emp);
+            return RedirectToAction("Index");
+        } 
+
+- B) with direct  parameters names : 
+
+        [HttpPost]
+        public  ActionResult Create(string Name ,string gender ,string city , int  deptId)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+           Employee emp = new Employee();
+
+            emp.Name = Name;
+            emp.Gender = gender;
+            emp.City = city;
+            emp.DeptId = deptId;
+            EmployeeBussinnessLayer helper = new EmployeeBussinnessLayer();
+            helper.AddEmployee(emp);
+            return RedirectToAction("Index");
+        }
+
+  note : 
+         parameters names should be the same as boxes names  in the form  ...... مهم 
+		 you can inspect the page to check for every controller name . 
+		 names is very important but its order is not important .
+-------------------------------------------------------------------------------------------------------------
+15 -  UpdateModel Function in MVC dot net : 
+
+- it is the third method that can Read Data From POsted Form 
+ 
+- you can simply pass object itself insted of parameters separated : 
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+           
+            return View();
+        }
+        [HttpPost]
+        public  ActionResult Create(Employee emp)
+        {
+            EmployeeBussinnessLayer helper = new EmployeeBussinnessLayer();
+            helper.AddEmployee(emp);
+            return RedirectToAction("Index");
+        }
+		
+- you can use UpdateModel Function to do the same job :
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+           
+            return View();
+        }
+        [HttpPost]
+        public  ActionResult Create()
+        {
+            EmployeeBussinnessLayer helper = new EmployeeBussinnessLayer();
+
+            Employee emp = new Employee();
+            UpdateModel(emp);
+            helper.AddEmployee(emp);
+            return RedirectToAction("Index");
+        }
+
+note :  error will be raise due to function Create have the same name and the same Dignature 
+        we need to change its name and also keep the name in url that redirected to this function 
+        use attribute ActionName("Create") to fix this issue . 		
+- the full Controller will be something like this : 
+	 
+	 public class EmployeController : Controller
+		{
+			EmployeeBussinnessLayer employeeBusinesslayer = new EmployeeBussinnessLayer();
+			
+			public ActionResult Index()
+			{
+				List<DataBaseModel.Employee> employees = employeeBusinesslayer.employees.ToList();
+
+				return View(employees);
+			}
+
+			[HttpGet]
+			[ActionName("Create")]
+			public ActionResult Create_Get()
+			{
+			   
+				return View();
+			}
+			[HttpPost]
+			[ActionName("Create")]
+			public  ActionResult Create_post()
+			{
+				if (ModelState.IsValid)
+				{
+					EmployeeBussinnessLayer helper = new EmployeeBussinnessLayer();
+
+					Employee emp = new Employee();
+					UpdateModel(emp);
+					helper.AddEmployee(emp);
+					return RedirectToAction("Index");
+				}
+				else
+				{
+					return View(); 
+				}
+			}
+
+
+
+		}
+	
+---------------------------------------------------------------------------------------------------------------
+16- Difference between UpdateModel and try UpdateModel functions : 
+	 
+
+
+
+
+
+//-----------------------------------------------------------------------------------------
+this is part 14 for asp.net MVC Tutorials 
+//-----------------------------------------------------------------------------------------
+in this slide we are going to discuss the idea behind press Edit Button  in index page : 
+
++add new functions in EmployeeController one get , other Post 
+
+        [HttpGet]
+        public ActionResult Edit(int Id)
+        {
+            EmployeeBO emp = new EmployeeBO();
+            emp=emp.GetById(Id);
+            return View(emp);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EmployeeBO updatedEmployee)
+        {
+            EmployeeBO emp = new EmployeeBO();
+            if (ModelState.IsValid)
+            {
+                emp.update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            return View(updatedEmployee);       
+        }
+		
+    + add Edit.cshtml automatically in your project .. 		
+		
+		  just add this line after @Html.BeginForm
+		  {
+		  }
+			@if (Model.Statues != null)
+			{
+			<div>
+				@Html.Label(Model.Statues);
+			</div>
+		
+		
+		
+		
+		
+		
+//-------------------Part 19 Unintended updates in mvc--------------------------------------------------
+in the same Edit View .....if we wish to make name as read only propberty 
+
+go to view and replace : 
+
+	  @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+	  @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+with : 
+
+
+       @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+
++ if you do that name is still required prop and now not exist ,,,,update request will never processed . 	   
++ so you need also , to add hidden element for name  :
+ 
+                @Html.HiddenFor(model => model.Name)
+//-----------------------------------------------------------------------------------------------------
+using some tools like fidler ,, you can sniff your request and try to post data from outside request ..
+it will success and data will be posted even if name prop ..
+
++go to Edit Activity and edit it like this :
+
+  [HttpPost]
+        [ActionName("Edit")]
+        public ActionResult Edit_post(int Id)
+        {
+           
+
+            var embdb = new EmployeeBO().GetById(Id);
+            EmployeeBO updatedEmployee = new EmployeeBO() { Id=embdb.Id, City=embdb.City, Gender =embdb.Gender, Name=embdb.Name  };
+            UpdateModel(updatedEmployee, new string [] { "City","Gender" }) ;
+
+            if (ModelState.IsValid)
+            {
+                new EmployeeBO().update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            return View(updatedEmployee);       
+        }
+		
+		
+		
+		
+this time you can not update record using Fidler .
+
+
+//--------------------------------------------------------------------------------------------------------
+this is another way to bind data using attributes :
+{Part 21 Including and excluding properties from model binding using bind attributes}
+
+
+         [HttpPost]
+		 
+        [ActionName("Edit")]
+        public ActionResult Edit_post([Bind(Exclude ="Name")] EmployeeBO updatedEmployee)
+        {
+
+
+            //var embdb = new EmployeeBO().GetById(Id);
+            //EmployeeBO updatedEmployee = new EmployeeBO() { Id=embdb.Id, City=embdb.City, Gender =embdb.Gender, Name=embdb.Name  };
+            //UpdateModel(updatedEmployee, new string [] { "City","Gender" }) ;
+
+            updatedEmployee.Name = new EmployeeBO().GetById(updatedEmployee.Id).Name;
+
+            if (ModelState.IsValid)
+            {
+                new EmployeeBO().update(updatedEmployee);
+                updatedEmployee.Statues = "updated successfully ";
+                return View(updatedEmployee);
+            }
+            updatedEmployee.Statues = "error while updating request ";
+            return View(updatedEmployee);       
+        }
++ you will find  error occurred .. go to immediate windows ..and debug 
+
+in command window Type : immed 
+		
+			? ModelState["Name"]
+			{System.Web.Mvc.ModelState}
+				Errors: Count = 1
+				Value: null
+			? ModelState["Name"].Value
+			null
+			? ModelState["Name"].Errors[0]
+			{System.Web.Mvc.ModelError}
+				ErrorMessage: "The Name field is required."
+				Exception: null
+
+
+// name field is required ..so kindly remove [Required] tag over class Elements ..
+
+
+		
+		
+		
+		
+		
+//----------------implementing Delete Request-----------------------------
+1- Go To controller and add  :
+
+   public ActionResult Delete(int id)
+        {
+            EmployeeBO empbo = new EmployeeBO();
+            empbo.Delete(id);
+
+            return RedirectToAction("Index");
+
+        }
+		
+2- no need to add view as it will redirect to index after finishing delete 
+3- you will need to add this function in bussinness object :
+
+ public void Delete(int id)
+        {
+            new EmployeeRepo().Delete(id);
+        }
+		
+4- and also to repo : 
+
+        public void Delete(int id)
+        {
+            try
+            {
+                var EmpEntity = dbx.Employees.FirstOrDefault(x => x.Id == id);
+                dbx.Employees.Remove(EmpEntity);
+                dbx.SaveChanges();
+            }
+            catch 
+            {
+                
+            }
+           
+        }
+		
+5- Lets answer the question of why it is not recommended to use Get Request to make Delete Request 
+
++ simply add html page with this html :
+
+<a href= "http://localhost:18317/employee/Delete/26"  >
+<img src= "C:/Images/img_set.png"  height="42" width="42" />
+</a>
+
+after you press the button you can Easily remove element from database : 
+
+
+//-----------------------------------------------------------------------------------------------
+       //---24---deleting request using Post Request------//
+	
+1- Decorate delete function with http post attribute : 
+
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            EmployeeBO empbo = new EmployeeBO();
+            empbo.Delete(id);
+
+            return RedirectToAction("Index");
+
+        }
+2- we want to make a post request from our code ..
+   action link can not make a post request 
+   forms is the only controllers that can add post request 
+   so we will delete action link and add instead it form and inside form 
+   anew button with type submit :
+   
+   
+    //---------this code -------------------------------------------------------
+   
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Statues)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+   
+    //----------------------will be changed by this----------------------------- 
+      @foreach (var item in Model)
+        {
+            using (Html.BeginForm("Delete", "Employee", new {id = item.Id}))
+             {
+                 <tr>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.Name)
+                     </td>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.City)
+                     </td>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.Gender)
+                     </td>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.Statues)
+                     </td>
+                     <td>
+                         @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                         <input type="submit" value="Delete" onclick="return  confirm('are you sure you want to delete record with ID = @item.Id');"/>
+                     </td>
+                 </tr>
+             }
+        }
+
+//---------------------------------------------------------------------------------------------
+
+//------------------------25/ Creating new controller autoGenerated from visual studio -----
+	
+	its very easy ...
+	
+	just check the following : 
+	
+	+ every table have aprimary key and right relation with the other tables 
+	+ every table id is autoGenerated ..
+	
+//---------------------------------------------------------------------------------------------
+
+//------------------------26/ Add fix to Table Name using partial classes  -----
+	
+	+ he always map database colum names as table colum names also 
+	+ what if we need to change this name : 
+	- write Display(name ="new col name") in .edmx file 
+	  note : 
+	     this file is autoGenerated and if it changes in the future ..every manuall update will be removed
+	+ use Parial classes :
+	
+	 at any folder but with the same namespace add this class : 
+	 
+			using System;
+			using System.Collections.Generic;
+			using System.ComponentModel;
+			using System.ComponentModel.DataAnnotations;
+			using System.Linq;
+			using System.Web;
+
+			namespace app25.DataBaseModel
+			{
+			  [MetadataType(typeof(DepartmentMetaData))]
+				public  partial class Department
+				{
+					
+				}
+
+
+				public class DepartmentMetaData
+				{
+					[Display(Name = "Department Name")]
+					public string Name { get; set; }
+				}
+			}
+
+    + now its working fine : 
+//---------------------------------------------------------------------------------------------
+
+//------------------------27 -Customized the autoGenerated Views  -----------------------------
+=> to customize your view that will be displayed with required Field ...
+    the same manner of previous lecture ..we can not modify the autoGenerated classes of entity framwork so 
+	we use partial classes . 
+
+ //----------------------------this is to use all employee/data as required 
+ 
+	    [MetadataType(typeof(EmployeeMetaData))]
+    public partial class EmployeeData
+    {
+
+    }
+
+
+    class EmployeeMetaData
+    {
+
+        [Required]
+        public string DepartmentId { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Gender { get; set; }
+        [Required]
+        public string City { get; set; }
+    }
+
+ //------------------------------------------------------------------------------------------------------------------
+ 
+//------------------------28 -Customized the autoGenerated Edit View  -----------------------------
+
+1- to add dynamically error to any attribute you can write this in your code : 
+
+   if(string.IsNullOrEmpty( employeeData.Name))
+                ModelState.AddModelError("Name","The name Field Is required ..");
+				
+==>  guess that out bussinness logic say that we need to make  name attribute as read only ..
+
+   -  first of all Edit Edit.cshtml file to make Editfor helper to displayeFor ..
+   -  now , EmployeeData object that passed to Edit Function have null for name 
+   -  so  we need to Retrive name Field from Database and Set it to this object 
+   
+            var dbemp = db.EmployeeDatas.FirstOrDefault(x => x.EmployeeId == employeeData.EmployeeId);
+            employeeData.Name = dbemp.Name;   
+   - this line will make issues kindly remove it and update object manually  
+   - this will be the overall code at Edit : 
+   
+			public ActionResult Edit([Bind(Include = "EmployeeId,Gender,City,DepartmentId")] EmployeeData employeeData)
+			{
+				var dbemp = db.EmployeeDatas.FirstOrDefault(x => x.EmployeeId == employeeData.EmployeeId);
+				employeeData.Name = dbemp.Name;
+
+				dbemp.City = employeeData.City;
+				dbemp.DepartmentId = employeeData.DepartmentId;
+				dbemp.Gender = employeeData.Gender;
+				
+
+				if (ModelState.IsValid)
+				{
+				   // db.Entry(employeeData).State = EntityState.Modified;
+					db.SaveChanges();
+					return RedirectToAction("Index");
+				}
+				ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", employeeData.DepartmentId);
+				return View(employeeData);
+			}
+		
+	- note : 
+	if you try to update any field the validation error "Name is required .."
+    will be appear . 
+	so you will need to remove Required attribute which will make some problems in Create Function ..
+	so better solution is to use dynamice Binding in code : 
+	
+	             var dbemp = db.EmployeeDatas.FirstOrDefault(x => x.EmployeeId == employeeData.EmployeeId);
+                 employeeData.Name = dbemp.Name; 
+
+//--------------------------------------------------------------------------------------------------------------
+
+//------------------------29 using dataTransfer Object as model in MVC.net -----------------------------
+
+=> if we want to create view based on custom list  in memory 
+   lets create new object called DepartmentTotals : 
+   
+      public class DepartmentTotals
+    {
+        public string Name  { get; set; }
+
+        public  int Total { get; set; }
+    }
+	
+	lets fill it from db with department names and total Emp in every department
+	
+      public ActionResult EmployeeByDepartment()
+        {
+            var employees = db.EmployeeDatas.Include("Department")
+                .GroupBy(x => x.Department.Name)
+                .Select(y => new DepartmentTotals
+                {
+                    Name = y.Key,
+                    Total = y.Count()
+                }).ToList().OrderBy(y=> y.Total ); 
+
+
+
+            return View(employees); 
+        }
+		
+		
+    + finally we need  to create View Based on this list :
+	  - create new View choose Template : List 
+	    and class name : DepartmentTotals 
+	+every thing will working fine 
+	
+	note : 
+	  you may face some Problems in Validation Errors unlike Previous method as 
+	  validation Errors is a Dictionary that defined in the controller class
+      never seen outside . 
+
+	  
+//-----------------------------------------------------------------------------------------------
+
+//------------------------Part 30 View engines in asp net mvc-----------------------------
+
+//------------------------Part 31 spark View engines         -----------------------------
+
+ --> not intersted two videos .. actually not applicable 
+
+//----------------------------------------------------------------------------------------------
+
+//----------------------Part 32 Convention used by MVC to Find views-----------------------------
+    
+   => by default MVC looks for a view with the same name as that of the controller action method 
+    name in the following locations :
+	
+	views/folderNameMatchingControllerName
+	views/Shared
+	
+	with this extensions :
+	.cshtml
+	.vbhtml
+	.aspx
+	.ascx
+	
+	
+	if you have Multible files with the same name in different locations 
+	you have to specify the full name :
+	~/Views/Employee/Index.cshtml
+	
+	
+	
+  note : 
+    shared folder is basically used to share Views between controller 
+	
+  conclusion note : 
+    when you use code like :
+
+        	return View(employeeData); 
+     by default it search for view with the same name of controller and by default
+	 with .cshtml 
+	 if you want to change this you need to use another overload from View function that 
+	 take view name 
+	 if you need to go to view with another extensions (.aspx for ex) 
+	 you need to put the full path 
+     (login.aspx is not correct ....he will render that to login.aspx.cshtml
+//----------------------------------------------------------------------------------------
+	 //------------------------Part 33 some Html helpers --------------------------------
+	 
+	 some Helpers ..... most of them is Known 
+	 
+//----------------------------------------------------------------------------------------
+	 //------------------------Part 34 some Html helpers DropDownList --------------------
+	 
+ =>	you can bind it with hard-code like this : 
+	
+  <div class="col-md-12">
+        <div class="form-group">
+            @Html.Label("Gender", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("Departments", new List<SelectListItem>() {
+
+                 new SelectListItem() { Text = "Male" , Value="Male" },
+                 new SelectListItem() { Text = "Female" , Value="Female" } }, "Select Gender", new { @class = "form-control" })
+            </div>
+        </div>
+  </div>
+  
+  => you can also use another constructor that take the list from viewBag 
+
+//------------------------------------------------------------------------------------------
+	 //------------------------Part 35 Drop DownList Selective Value -----------------------.
+
+lets cont. to the previous ex : 
+
+=> if you want to start drop dropdownlist to be selected with specify value ..
+  you can use this overload : 
+   ViewBag.Departments = new SelectList(dbx.Departments, "Id", "Name","1"); 
+
+=>  we add also added a column is selected in dataBase to handel this issue . 
+
+=> finally my code will be like : 
+
+       var Id = dbx.Departments.FirstOrDefault(x => x.IsSelected != null).Id; 
+	   
+       ViewBag.Departments = new SelectList(dbx.Departments, "Id", "Name",Id.ToString()); 
+	 
+//------------------------------------------------------------------------------------------
+      //----------------------Part 36 Difference between Html TextBox and Html TextBoxFor ------------------
+	 
+	            long not intersted demo kindly check from video , I got the main idea 
+
+//------------------------------------------------------------------------------------------
+      //----------------------Part 37 Generating Aradio Button List control in mvc using html helper ------------------
+	 			
+=> this is index get action  :
+     [HttpGet]
+        public ActionResult Index()
+        {
+            Company company = new Company();
+
+            return View(company); 
+        }
+		
+=> this is index Post Function : 
+    		
+	    [HttpPost]
+        public string Index(Company company)
+        {
+            if (!string.IsNullOrEmpty(company.SelectedDepartment))
+            {
+                return "you choosed ..."+company.SelectedDepartment;
+            }
+            else
+                return "nothing selected ..";
+        }
+	 
+
+=> this is index.cshtml 
+
+		@model WebApplication8.DataBaseModel.Company
+		@{
+			ViewBag.Title = "Index";
+		}
+		<h2>Index</h2>
+		@using (Html.BeginForm())
+		{
+			foreach (var department in Model.Departments)
+			{
+				@Html.RadioButtonFor(m=>m.SelectedDepartment, department.Id) <span>&nbsp;</span> @department.Name
+				<br/>
+				<br /> 
+			}
+			<hr/>
+			<br/>
+			<input type="Submit" value="Submit" />
+		}
+
+
+
+//------------------------------------------------------------------------------------------
+      //----------------------Part 40 using Custom attribute  ------------------
+
+demo :
+
+                public  partial class  tblEmployee
+        {
+            
+        }
+
+        public class  EmployeeMetaData
+        {
+            [Display(Name ="Full Employee Name")]
+            public string FullName { get; set; }
+           
+           [DisplayName("Person Type ")]
+            public  string Gender { get; set; }
+
+           [DisplayFormat(DataFormatString = "{0:d}")]
+           public  DateTime  HireDate { get; set; }
+
+          [DisplayFormat(NullDisplayText = "Gender not Specified")]
+          public string EmailAddress { get; set; }
+
+
+        [ScaffoldColumn(false)]
+           public  int Salary { get; set; }    //this Colum will not Be displayed 
+
+        }
+
+//------------------------------------------------------------------------------------------
+      //----------------------Part 41  ------------------
+
+	            [Display(Name ="Full Employee Name")]
+            public string FullName { get; set; }
+           
+            [DisplayName("Person Type ")]
+            public  string Gender { get; set; }
+
+            [DisplayFormat(DataFormatString = "{0:d}")]
+           public  DateTime  HireDate { get; set; }
+
+            [DisplayFormat(NullDisplayText = "Gender not Specified")]
+            [DataType(DataType.EmailAddress)]
+            public string EmailAddress { get; set; }
+
+
+            [DataType(DataType.Currency)]
+            public  int Salary { get; set; }    //this Colum will not Be displayed 
+
+       //  [DisplayColumn("Column name")]  when you have complex type and you want to display only one attribute from it . 
+
+//------------------------------------------------------------------------------------------------------------------------
+      //----------------------Part 42  ------------------
+
+	1-  go to Shared and Create anew Folder called : DisplayTemplates
+    2-  inside it add new view called Uri (have only) : 
+         <a href="@ViewData.Model" target="_blank" >@ViewData.Model</a> 
+		 
+	3-  at your link that marked 
+	
+	      [DataType(DataType.Url)]
+          public string PersonalWebSite { get; set; }
+	
+	4- if you want to change the name of file use atttribute 
+        
+           [DataType(DataType.Url)]
+
+            [UIHint("CustomUrlName")]
+            public string PersonalWebSite { get; set; }
+			
+				 
+//-----------------------------------------------------------------------------------------------------------------------
+
+      //----------------------Part 43  ------------------
+				 
+				 very easy ... hidden and read only attribute
+				 
+				
+//-----------------------------------------------------------------------------------------------------------------------		
+		
+		
+//-------------lesson 49-------------------------------------------------
+//---------------------HTML encoding ------------------------------------
+
+
+the problem of that when Creating MVC Custom contrlls , and this custom controls return string , some char will be in encoded 
+to fix this issue youcan : 
+
+1- 
+2-
+3- 
+
+for more details look at Image Custom helpers file 
+
+//-------------------lesson 50 --------------------------------------------------
+
+=> enable comppile time Errors and validation 
+1- simply open your app 
+2- using AppName.csproj with  NotPad ++ 
+3- search for  <MvcBuildViews>false</MvcBuildViews>
+4- change it with true .
+
+//------------------lesson 51 ----------------------------------------------------
+//------------------partial Views-------------------------------------------------
+
+make aview as ashared between many views and called it with @html.Partial 
+
+
+=> you can put shared view in controller folder and this means that it will be seen by this controller only 
+   and you can also put it in shared folder where all views can see it . 
+
+=> you can simply use @html.Partial(viewname , object that this view build over)
+
+
+//-------------------Lesson 52--------------------------------------------------------------
+//-------------------Part 53 Difference between html.partial and html.renderpartial---------
+
+
+both of them is used to render Partial view 
+
+Difference between html.partial and Html.RenderRartial is that :
+
+=> Partial : return MvcHtmlString which can be assigned to avariable and manipulating it if required . 
+
+=> RenderRartial  : Returns void and output will be written directly to the screen  
+
+which one is better in performance ? 
+
+from a performance perspective , rendering directly to the output stream is better 
+so RenderRartial() does exactly the same thing and it better for performance over Partial .
+
+//-------------------Lesson 54------------------------------------------------------------------
+   
+Cross site scripting attack : 
+
+
+
+//-------------------Lesson 57------------------------------------------------------------------
+
+=> you can write full block of c# code in cshtml file using :
+
+@{
+  -----all c# code -----
+  
+  
+}
+
+=> you can also switch from this block of c# code is to use  <text> </text>   or @:
+
+demo : 
+
+@for ( int i=0 ; i<=19 ; i++)
+{
+    <b>@i </b>
+	
+	if(i %2 == 0)
+	{
+	 @: -Even 
+	}
+	
+    else
+    {
+	 <text> -odd </text>
+	}
+}
+
+
+//-------------------Lesson 58------------------------------------------------------------------
+
+=> @*this is to comment some thing in Razo Viwes *@
+
+=> also you can switch between html and c# using operator @ as you know
+
+=>  mvc is smart and can understand @ symbol in Email and does not Generate any error 
+demo : 
+
+ <b> minaanwer@gmail.com </b>
+ 
+=> in another cases where @ is not in Email , MVC can not understand it 
+  demo : 
+
+      I will meet  you  @ office 
+
+ simply add another @ to @ and mvc will override it  
+ I will meet you @@office -->  I will meet you @ office  
+	
+	
+//-------------------Lesson 59------------------------------------------------------------------
+=> layout View 
+
+
+put all code that always repeated in every page in out website once in layout view 
+anf all views will inherit form this view . 
+
+=> to add layout which is used as master Page simply add a file in shared folder  _Layout.cshtml
+   where you want to make every view add its content jsut add  : @RenderBody()
+	
+=> in every view to make it inherit from this layout just add 
+   Layout = "~/Views/Shared/_Layout.cs"; 
+//-------------------Lesson 60------------------------------------------------------------------
+
+=>  to avoid repeat this line : Layout = "~/Views/Shared/_Layout.cs"; 
+
+          in every view in the solution , just go to _ViewStart.cshtml
+          this file is always called after begin executing every view  .and add line that you want to be repeated 
+  
+=>   you can still use Layout prop in every page , and override the inherited value . 
+
+
+=>   you can also specify the layout file in controller action method  :  return View("Create","_LayoutName");
+
+=> you can also change layout based on Browser : 
+  
+   @{
+       Layout = Request.Browser.IsBrowser("Chrome") ? 
+	                          "~/Views/Shared/_Layout.cshtml" : "~/Views/Shared/_layoutIE.cshtml";
+    }
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
