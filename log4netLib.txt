@@ -1,0 +1,43 @@
+1- add log4net lib from nuget backage 
+
+2- add log4net.config :
+
+<log4net>
+  <root>
+    <level value="ALL" />
+    <appender-ref ref="console" />
+    <appender-ref ref="file" />
+  </root>
+  <appender name="console" type="log4net.Appender.ConsoleAppender">
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date %level %logger - %message%newline" />
+    </layout>
+  </appender>
+  <appender name="file" type="log4net.Appender.RollingFileAppender">
+    <file value="D:\myapp.log" />
+    <appendToFile value="true" />
+    <rollingStyle value="Size" />
+    <maxSizeRollBackups value="5" />
+    <maximumFileSize value="10MB" />
+    <staticLogFileName value="true" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %level %logger - %message%newline" />
+    </layout>
+  </appender>
+</log4net>
+
+3- add test method : 
+
+       static void Main(string[] args)
+        {
+            log.Info("Welcom world welcom world");
+            log.Debug("Welcom world welcom world");
+            log.Error("Welcom world welcom world");
+            log.Fatal("Welcom world welcom world");
+            log.Warn("Welcom world welcom world");
+            log.Info("Welcom world welcom world");
+            Console.WriteLine("hit enter ");  
+            Console.ReadLine(); 
+        }
+		
+		
