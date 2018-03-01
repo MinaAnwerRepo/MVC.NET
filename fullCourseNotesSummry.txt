@@ -1058,131 +1058,65 @@ anf all views will inherit form this view .
 	                          "~/Views/Shared/_Layout.cshtml" : "~/Views/Shared/_layoutIE.cshtml";
     }
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//-------------------Lesson 61------------------------------------------------------------------
+//----------named sections in mvc.net-----------------------------------
+
+demo : 
+     go to any view and add 
+
+       @section Menu
+		{
+			@Html.ActionLink("List" , "Index") <br/>
+			@Html.ActionLink("About","About") <br/>
+			@Html.ActionLink("Contact", "Contact") <br/>
+		}
+
+=>	 at _Layout page you can add where you will render this section 
+       
+	   @RenderSection("Menu")
+=> with this line you need to define this section in every view 
+    you can override that by useing another overload with isRequired prop 
+	
+	  @RenderSection("Menu", false)
+	  
+=> you can specify if defind prop to determine if section defined in the view or not 
+also with default seaction : 
+
+       @if (IsSectionDefined("Menu"))
+    {
+        @RenderSection("Menu", false)
+    }
+    else
+    {
+        @Html.ActionLink("Default Link", "Index")
+    }
+	
+//-----------------------------------lesson 62-----------------------------------------------
+//-----------------------------------implementing search -------------------------
+=> at index page add : 
+    
+    @using (Html.BeginForm("Index", "tblEmployes",FormMethod.Get))
+   {
+      <b>Search by :</b>
+      @Html.RadioButton("searchBy","Name",true) @: Name
+      @Html.RadioButton("searchBy", "gender") @: gender <br/>
+      @Html.TextBox("search") <input type = "submit" class="btn btn-default" value = "Search"/>
+   }
+
+
+=> at index controller function add another function to handel search : 
+
+  [HttpGet]
+        public ActionResult Index(string searchBy, string search)
+        {
+            if(searchBy=="Name")
+            { return View(db.tblEmployes.Where(x => x.Name.Contains(search)).ToList());}
+            else if(searchBy=="gender")
+            { return View(db.tblEmployes.Where(x => x.Gender==search).ToList());}
+            else
+            {
+                return View(db.tblEmployes.ToList());
+            }
+        }
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+//-----------------------------------------------------------------------------------------------------	

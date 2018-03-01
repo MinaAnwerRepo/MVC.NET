@@ -1,0 +1,53 @@
+introduction  : 
+
+=> microsoft started in 2002 with ASP.NET ASMX-based XML web service that allowed other .NET and non-.NET clients to call it but it available only with http protocol 
+
+=> the 1.0 release of .NET provided support for Remoting. This allowed
+developers to write services that weren’t necessarily tied to the HTTP protocol. Similar to ASMX-based web services,
+.NET Remoting essentially provides object activation and session context for client-initiated method calls. The
+caller uses a proxy object to invoke methods, and the .NET runtime handles the serialization and marshaling of data
+between the client’s proxy object and the server’s activated service object.
+
+=> 2006 : Microsoft included Windows Communication Foundation service with framework 3 
+        
+=>  Advantages of using webApi : 
+   
+   1- Configurations : 
+    the concept of endpoint and contract is not exists . 
+   
+   2- Rest By Default : 
+   in WCF the address maps directly to file .svc , here url maps to controller and action method .
+   
+   3- Abstraction with Routes : 
+    simply Routes give ASP.NET webApi service layer of abstraction 
+	you can change code behind as much as you need and service will work normally as the URL does not changed .
+	
+	
+	
+	
+	chapter 2 : What is RestFul ?
+	
+	=> 
+	
+   
+     chapter 3 : Designing the Sample Rest API : 
+	 
+	 
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
